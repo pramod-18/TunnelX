@@ -64,7 +64,7 @@ everything organized and under your control.
    After the installation,
    
    - 
-   - Open the file in the following directory [`main\tunnelx-backend\vpn_configs\vpnbook-openvpn-fr231\vpnbook-fr231-udp25000.ovpn`](main\tunnelx-backend\vpn_configs\vpnbook-openvpn-fr231\vpnbook-fr231-udp25000.ovpn). 
+   - Open the file in the following directory [`tunnelx-backend/vpn_configs/vpnbook-openvpn-fr231/vpnbook-fr231-udp25000.ovpn`](tunnelx-backend/vpn_configs/vpnbook-openvpn-fr231/vpnbook-fr231-udp25000.ovpn). 
    
 7. **Start the servers:**
    
