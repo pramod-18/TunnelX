@@ -1,4 +1,3 @@
-// src/utils/socket.js
 import { io } from "socket.io-client";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
