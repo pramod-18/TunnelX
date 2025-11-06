@@ -1,0 +1,706 @@
+/* Global reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #0e0e10;
+  color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Login Card */
+.login-container {
+  background-color: #1a1a1d;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  width: 360px;
+  text-align: center;
+}
+
+.login-container h1 {
+  color: #3b82f6;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-container h2 {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background-color: #2a2a2d;
+  color: white;
+  outline: none;
+  margin-top: 0.3rem;
+}
+
+.input-group input:focus {
+  border-color: #3b82f6;
+}
+
+button {
+  width: 100%;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2563eb;
+}
+
+.toggle-text {
+  margin-top: 1rem;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.toggle-text span {
+  color: #3b82f6;
+  cursor: pointer;
+}
+
+.toggle-text span:hover {
+  text-decoration: underline;
+}
+
+/* Dashboard Page */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.dashboard-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  margin-bottom: 2rem;
+  padding: 18px 40px;
+  background-color: #121212;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.nav-left h1 {
+  color: #3b82f6;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+}
+
+.nav-right button {
+  background-color: #ef4444;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.nav-right button:hover {
+  background-color: #dc2626;
+}
+
+.dashboard-nav h1 {
+  color: #3b82f6;
+  font-size: 1.5rem;
+}
+
+.dashboard-nav button {
+  background-color: #ef4444;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+.dashboard-content {
+  background-color: #1a1a1d;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  color: white;
+}
+
+.vpn-card h2 {
+  margin-bottom: 1rem;
+  color: #ddd;
+}
+
+.vpn-btn {
+  width: 100%;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 18px;
+}
+
+.vpn-btn.connect {
+  background-color: #3b82f6;
+}
+
+.vpn-btn.disconnect {
+  background-color: #ef4444;
+}
+
+.vpn-btn:hover {
+  opacity: 0.9;
+}
+
+.stats {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #b0b0b0;
+  line-height: 1.8;
+}
+
+/* Admin Panel */
+.admin-content {
+  background-color: #1a1a1d;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ccc;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.admin-table th {
+  color: #3b82f6;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.status-connected {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.status-disconnected {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.disconnect-btn {
+  background-color: #ef4444;
+  border: none;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.disconnect-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Navbar */
+.brand {
+  color: #3b82f6;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.user-icon {
+  color: #ccc;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.user-icon:hover {
+  color: #fff;
+}
+
+/* User menu */
+.user-menu {
+  position: absolute;
+  top: 70px;
+  right: 35px;
+  background-color: #1e1e1e;
+  border: 1px solid #2d2d2d;
+  border-radius: 8px;
+  padding: 12px;
+  min-width: 180px;
+  z-index: 50;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.user-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.user-menu button:hover {
+  background-color: #2b2b2b;
+  color: #fff;
+}
+
+.menu-username {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+/* Main content */
+.vpn-card {
+  background-color: #1e1e1e;
+  padding: 40px;
+  border-radius: 16px;
+}
+
+.vpn-card .connect {
+  background-color: #3b82f6;
+}
+
+.vpn-card .disconnect {
+  background-color: #ef4444;
+}
+
+.secondary-btn {
+  background-color: #6b7280;
+  color: #b0b0b0;
+}
+
+/* Profile Panel */
+.profile-panel {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: #1e1e1e;
+  border: 1px solid #2b2b2b;
+  border-radius: 12px;
+  width: 20%;
+  height: 100%;
+  padding: 15px;
+  color: #e5e5e5;
+  animation: fadeSlide 0.25s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+
+.profile-panel2 {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: #1e1e1e;
+  border: 1px solid #2b2b2b;
+  border-radius: 12px;
+  width: 15%;
+  height: 100%;
+  padding: 15px;
+  color: #e5e5e5;
+  animation: fadeSlide 0.25s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.profile-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.profile-header p {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin: 0;
+}
+
+.menu-options button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #ccc;
+  padding: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+  justify-content: space-between;
+}
+
+.menu-options button:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.toggle {
+  width: 35px;
+  height: 18px;
+  border-radius: 20px;
+  background-color: #555;
+  position: relative;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.toggle .circle {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle.on {
+  background-color: #3b82f6;
+}
+
+.toggle.on .circle {
+  left: 18px;
+}
+
+.logout-btn {
+  color: #ff4b4b !important;
+}
+
+/* Stats Panel */
+.stats-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 300px;
+  background: #111;
+  color: white;
+  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.3s ease;
+  padding: 20px;
+  z-index: 100;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stats-body p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+
+.connected-users-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #3b82f6;
+}
+
+.user-table-container {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.user-table th,
+.user-table td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.user-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #334155;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.user-table tr:hover {
+  background-color: #f1f5f9;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-badge.online {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.offline {
+  background-color: #dc2626;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+/* Merged with previous .disconnect-btn definition */
+  transition: all 0.2s ease;
+}
+
+.disconnect-btn:hover {
+  background-color: #dc2626;
+}
+
+.no-users {
+  color: #64748b;
+  text-align: center;
+  font-size: 1rem;
+  padding: 20px;
+}
+
+.dashboard-content {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  width: 100%;
+}
+
+.vpn-card.large-card {
+  width: 100%;
+  max-width: 1400px;
+  padding: 30px;
+  border-radius: 12px;
+  background-color: #111; /* dark background */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.connected-users-title {
+  color: #3b82f6; /* blue */
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.user-table-container {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #111; /* match card background */
+  color: #000;
+}
+
+.user-table th, .user-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+  text-align: left;
+}
+
+.user-table th {
+  color: #3b82f6; /* blue headings */
+  font-weight: 600;
+}
+
+.user-table td {
+  color: #eee; /* lighter text for readability */
+}
+
+.status-badge.online {
+  background-color: #16a34a;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Optional: improve scroll look */
+.user-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.user-table-container::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 4px;
+}
+
+
+/* Connected Users Section */
+.connected-users-section {
+  width: 95%;
+  margin: 40px auto;
+  padding: 20px;
+  background: #000000;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.connected-users-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #3b82f6;
+}
+
+/* Table Styling */
+.connected-users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.connected-users-table thead {
+  background-color: #3b82f6;
+  color: #fff;
+  text-align: left;
+}
+
+.connected-users-table th,
+.connected-users-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.connected-users-table tbody tr:hover {
+  background-color: #27292b;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.status-badge.online {
+  background-color: #10b981; /* green */
+}
+
+.status-badge.offline {
+  background-color: #ef4444; /* red */
+}
+
+.disconnect-btn {
+  padding: 6px 12px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.disconnect-btn:hover {
+  background-color: #dc2626;
+}
+
+.no-users {
+  text-align: center;
+  font-size: 18px;
+  color: #6b7280;
+  margin-top: 20px;
+}
