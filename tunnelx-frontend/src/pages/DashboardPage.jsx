@@ -13,10 +13,8 @@ import { MdAdminPanelSettings } from "react-icons/md";
 import { apiRequest } from "../utils/api";
 import { socket } from "../utils/socket.js";
 
-// API BASE should point to the server where the socket is listening
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
-// Initialize the socket connection outside the component for single use
 
 
 export default function DashboardPage() {
@@ -29,11 +27,11 @@ export default function DashboardPage() {
   const [adminMode, setAdminMode] = useState(false);
   const [showStatsPanel, setShowStatsPanel] = useState(false);
   const [showAdminToggle, setShowAdminToggle] = useState(false);
-  const [isAuthReady, setIsAuthReady] = useState(false); // New state for loading
+  const [isAuthReady, setIsAuthReady] = useState(false); 
   const [showSplitModal, setShowSplitModal] = useState(false);
 const [splitList, setSplitList] = useState([]);
 const [newTarget, setNewTarget] = useState("");
-const [targets, setTargets] = useState([]); // e.g. ["github.com", "openai.com"]
+const [targets, setTargets] = useState([]); 
 const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -54,7 +52,7 @@ const [stats, setStats] = useState(null);
 
     const interval = setInterval(fetchStats, 5000); // every 5 seconds
 
-    return () => clearInterval(interval); // cleanup when component unmounts
+    return () => clearInterval(interval);
   }, []);
 
 
@@ -76,7 +74,7 @@ async function handleApplySplitTunneling() {
 
     const res = await apiRequest("/api/vpn/split-tunnel", {
       method: "POST",
-      body: JSON.stringify({ domains: targets }), // ✅ key fixed
+      body: JSON.stringify({ domains: targets }), 
     });
 
     if (res.ok) {
@@ -91,7 +89,6 @@ async function handleApplySplitTunneling() {
   }
 }
 
-  // Function to sync connection status on load
   const fetchCurrentUserStatus = useCallback(async () => {
     if (!localStorage.getItem("isLoggedIn")) {
       globalThis.location.href = "/";
@@ -99,11 +96,9 @@ async function handleApplySplitTunneling() {
     }
     
     try {
-      // Fetch /api/me to get the user's current status (including isConnected) from DB
       const res = await apiRequest("/api/me", { method: "GET" });
       if (res.ok) {
         const userData = await res.json();
-        // Set the initial connection state from the database
         setConnected(userData.isConnected || false); 
       }
     } catch (error) {
@@ -113,14 +108,12 @@ async function handleApplySplitTunneling() {
     }
   }, []);
 
-  // Use useCallback for the server-pushed event handler
   const handleServerStatusUpdate = useCallback((data) => {
     console.log('Received server status update:', data);
 
-    // This handles the admin-forced disconnect
     if (data.type === 'forceDisconnect' && data.isConnected === false) {
       alert(data.message || "Your VPN connection was forcibly disconnected.");
-      setConnected(false); // Update local state immediately
+      setConnected(false); 
     }
 
     else if (data.type === 'addedAdmin' && data.role === 'admin') {
@@ -140,13 +133,11 @@ async function handleApplySplitTunneling() {
 
   useEffect(() => {
 
-  // 1️⃣ Fetch current user status
 
   fetchCurrentUserStatus();
 
 
 
-  // 2️⃣ Authenticate when socket connects AND user is available
 
   const handleConnect = () => {
 
@@ -163,7 +154,6 @@ async function handleApplySplitTunneling() {
   };
 
 
-  // 3️⃣ If already connected (in case of refresh), authenticate immediately
 
   if (socket.connected && user && user.id) {
 
@@ -177,13 +167,11 @@ async function handleApplySplitTunneling() {
 
 
 
-  // 4️⃣ Listen for admin-forced disconnect updates
 
   socket.on("statusUpdate", handleServerStatusUpdate);
 
 
 
-  // 5️⃣ Cleanup to prevent duplicates
 
   return () => {
 
@@ -193,7 +181,7 @@ async function handleApplySplitTunneling() {
 
   };
 
-}, []); // 👈 depend only on user
+}, []); 
 
 
 
@@ -215,7 +203,6 @@ useEffect(() => {
   const handleToggleConnection = async () => {
   const isConnecting = !connected;
 
-  // Use VPN route when connecting, and normal auth route when disconnecting
   const endpoint = isConnecting ? "/api/vpn/connect" : "/api/vpn/disconnect";
 
   try {
@@ -240,7 +227,6 @@ useEffect(() => {
 
   const handleLogout = async () => {
     try {
-      // API call to update status on server (sets isOnline=false)
       const res = await apiRequest("/api/auth/logout", {
         method: "POST",
       });
@@ -309,7 +295,6 @@ useEffect(() => {
   };
   const handleSettings = () => alert("Settings page coming soon!");
 
-  // If auth status hasn't been synced yet, show loading/placeholder
   if (!isAuthReady) {
     return <div className="dashboard-container text-center p-8">Loading dashboard...</div>;
   }
@@ -364,10 +349,10 @@ useEffect(() => {
               )}
             </button>
 
-            <button onClick={() => setShowStatsPanel(true)}>
+            <button>
               View Stats <FaChartBar />
             </button>
-            <button onClick={handleSettings}>
+            <button>
               Settings <FaCog />
             </button>
             <button onClick={handleFeedback}>
@@ -391,7 +376,7 @@ useEffect(() => {
             {connected ? "Disconnect VPN" : "Connect VPN"}
           </button>
 
-          <button className="vpn-btn secondary-btn" onClick={() => setShowSplitModal(true)}>Split Tunneling</button>
+          <button className="vpn-btn secondary-btn">Split Tunneling</button>
         </div>
 
         <div className="stats">
@@ -406,7 +391,7 @@ useEffect(() => {
         <div className="stats-panel">
           <div className="stats-header">
             <h2>📊 Live Connection Stats</h2>
-            <button onClick={() => setShowStatsPanel(false)}>✖</button>
+            <button>✖</button>
           </div>
           <div className="stats-body">
             <p>
