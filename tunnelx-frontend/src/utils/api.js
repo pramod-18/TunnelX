@@ -13,7 +13,6 @@ export async function apiRequest(path, options = {}) {
     },
   });
 
-  // If unauthorized, try refresh
   if (res.status === 401) {
     const newToken = await refreshAccessToken();
     if (!newToken) {
@@ -23,7 +22,6 @@ export async function apiRequest(path, options = {}) {
       return;
     }
 
-    // Retry with new token
     return await fetch(`${API_BASE}${path}`, {
       ...options,
       headers: {
