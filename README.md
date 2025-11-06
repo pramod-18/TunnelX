@@ -134,12 +134,13 @@ everything organized and under your control.
 
 10. **Access from a different PC:**
    
-   To access this application from a different PC, get the IPv4 address of the system on which the installation is done by using the following command.
+    To access this application from a different PC, get the IPv4 address of the system on which the installation is done by using the following command.
     ```bash
-   ipconfig
-   ```
-   Now, search the whole repository for `http://localhost:<port>/` and replace every instance of it with `http://<IPv4 address>:<port>/`.
+    ipconfig
+    ```
+    
+    Now, search the whole repository for `http://localhost:<port>/` and replace every instance of it with `http://<IPv4 address>:<port>/`.
    
-   Now you can visit ```http://<IPv4 address>:5173/```.
+    Now you can visit ```http://<IPv4 address>:5173/```.
 
 
