@@ -9,12 +9,11 @@ import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 import { spawn } from "child_process";
 import { exec } from "child_process";
-import net from 'net'; // added for management interface
+import net from 'net'; 
 import User from './models/User.js';
 import { authenticateJWT, authorizeAdmin } from './middleware/auth.js';
 
 const app = express();
-// CRITICAL FIX: Create HTTP server and attach Express app
 const server = createServer(app);
 
 
@@ -35,11 +34,11 @@ let vpnStats = {
   received: 0,
   interval: null,
   connectedSince: null,
-  managementPort: 7505, // port used for management interface
+  managementPort: 7505,
   managementPollMs: 5000,
 };
 
-// Initialize Socket.IO and attach it to the HTTP server
+
 const io = new Server(server, {
   cors: {
     origin: '*', 
@@ -65,7 +64,6 @@ if (!JWT_SECRET) {
   process.exit(1);
 }
 
-// Mongo connection
 try {
   await mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
@@ -77,9 +75,7 @@ try {
   process.exit(1);
 }
 
-// ----------------------
-// Token helpers
-// ----------------------
+
 function signAccessToken(user) {
   const payload = { sub: user._id.toString(), role: user.role, email: user.email };
   return jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_EXPIRES });
@@ -89,10 +85,7 @@ function createRefreshToken() {
   return crypto.randomBytes(48).toString('hex');
 }
 
-// ----------------------
-// Socket.IO Logic
-// ----------------------
-// Store a map of userId to Socket.id for targeted messages
+
 const userSocketMap = new Map();
 
 io.on('connection', (socket) => {
@@ -102,7 +95,6 @@ io.on('connection', (socket) => {
   console.log(`🧍 User connected: ${userId}`);
 
   if (userId) {
-    // If the user was already connected before reload, replace old socket
     const existingSocketId = userSocketMap.get(userId);
 
     if (existingSocketId && existingSocketId !== socket.id) {
@@ -138,7 +130,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', (reason) => {
     console.log(`❌ Socket disconnected: ${socket.id} (${reason})`);
 
-    // Delay cleanup slightly so reconnecting sockets aren't mistaken for disconnects
+
     setTimeout(() => {
       for (let [uid, sid] of userSocketMap.entries()) {
         if (sid === socket.id) {
@@ -152,11 +144,11 @@ io.on('connection', (socket) => {
 });
 
 
-// Helper function to send real-time updates to a specific user
+
 const notifyUserStatusChange = (userId, data) => {
     const socketId = userSocketMap.get(userId);
     if (socketId) {
-        // 'statusUpdate' is the event the client will listen for
+
         io.to(socketId).emit('statusUpdate', data);
         console.log(`Emitting statusUpdate to user ${userId} at socket ${socketId}`);
         return true;
@@ -165,9 +157,7 @@ const notifyUserStatusChange = (userId, data) => {
     return false;
 };
 
-// ----------------------
-// Auth routes
-// ----------------------
+
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -202,7 +192,7 @@ app.post('/api/auth/login', async (req, res) => {
     const accessToken = signAccessToken(user);
     const refreshToken = createRefreshToken();
 
-    // store refresh token with expiration date
+
     user.refreshTokens.push({
       token: refreshToken,
       createdAt: new Date(),
@@ -235,9 +225,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ----------------------
-// Auto refresh route
-// ----------------------
+
 app.post('/api/auth/refresh', async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -283,9 +271,7 @@ app.post('/api/auth/reset-pwd', async (req, res) => {
     }
 });
 
-// ----------------------
-// Middleware: Auto-refresh expired access token
-// ----------------------
+
 app.use(async (req, res, next) => {
   // only apply to authenticated routes
   const authHeader = req.headers['authorization'];
@@ -312,10 +298,10 @@ app.use(async (req, res, next) => {
         return res.status(403).json({ message: 'Refresh token expired' });
       }
 
-      // refresh valid → create new access token and attach to response header
+
       const newAccessToken = signAccessToken(user);
       res.setHeader('x-new-access-token', newAccessToken);
-      req.headers['authorization'] = `Bearer ${newAccessToken}`; // replace for downstream handlers
+      req.headers['authorization'] = `Bearer ${newAccessToken}`; 
       next();
     } else {
       return res.status(401).json({ message: 'Invalid token' });
@@ -323,9 +309,7 @@ app.use(async (req, res, next) => {
   }
 });
 
-// ----------------------
-// Protected routes
-// ----------------------
+
 app.post('/api/auth/logout', authenticateJWT, async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -335,13 +319,13 @@ app.post('/api/auth/logout', authenticateJWT, async (req, res) => {
     if (vpnProcess) {
       console.log("🔌 User logging out — disconnecting VPN...");
       try {
-        // Stop uptime tracking
+
         if (vpnStats.interval) {
           clearInterval(vpnStats.interval);
           vpnStats.interval = null;
         }
 
-        // destroy management client if present
+
         try {
           if (vpnManagementClient) {
             vpnManagementClient.destroy();
@@ -359,7 +343,7 @@ app.post('/api/auth/logout', authenticateJWT, async (req, res) => {
           console.warn("⚠️ Could not kill by PID, trying taskkill fallback:", err.message);
         }
 
-        // Force kill backup (Windows)
+
         exec('taskkill /F /IM openvpn.exe /T', (error, stdout, stderr) => {
           if (error) {
             console.error("❌ Error killing OpenVPN:", stderr || error.message);
@@ -410,7 +394,7 @@ app.post('/api/auth/connect', authenticateJWT, async (req, res) => {
         user.isConnected = true;
         await user.save();
         
-        // Notify the Admin dashboard that this user's status changed
+
         io.emit('adminRefresh', { userId: user._id.toString(), isConnected: true }); 
 
         res.json({ message: 'Connected' });
@@ -428,7 +412,6 @@ app.post('/api/auth/disconnect', authenticateJWT, async (req, res) => {
         user.isConnected = false;
         await user.save();
         
-        // Notify the Admin dashboard that this user's status changed
         io.emit('adminRefresh', { userId: user._id.toString(), isConnected: false }); 
 
         res.json({ message: 'Disconnected' });
@@ -444,14 +427,13 @@ app.post("/api/vpn/connect", authenticateJWT, async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // If a process already exists for this user
     if (vpnProcesses.has(userId)) {
       return res.status(400).json({ message: "VPN already connected for this user" });
     }
 
     const openVpnPath = "C:\\Program Files\\OpenVPN\\bin\\openvpn.exe";
     const configPath = `${process.cwd()}\\vpn_configs\\vpnbook-openvpn-fr231\\vpnbook-fr231-udp25000.ovpn`;
-    const mgmtPort = 7505 + Math.floor(Math.random() * 1000); // each user gets a unique port
+    const mgmtPort = 7505 + Math.floor(Math.random() * 1000); 
 
     console.log(`🚀 Starting VPN for ${user.email} on port ${mgmtPort}`);
 
@@ -476,14 +458,14 @@ app.post("/api/vpn/connect", authenticateJWT, async (req, res) => {
       interval: null,
     });
 
-    // stdout handler
+
     processInstance.stdout.on("data", async (data) => {
       const line = data.toString();
       console.log(`📜 [${user.email} STDOUT]:`, line);
 
       if (line.includes("Initialization Sequence Completed")) {
         console.log(`✅ VPN Connected for ${user.email}`);
-        startManagementPolling(userId); // start per-user polling
+        startManagementPolling(userId); 
         user.isConnected = true;
         await user.save();
         io.emit("adminRefresh", { userId, isConnected: true });
@@ -512,7 +494,7 @@ app.post("/api/vpn/connect", authenticateJWT, async (req, res) => {
   }
 });
 
-// Management polling helper
+
 function startManagementPolling(userId) {
   const stats = vpnStatsMap.get(userId);
   if (!stats) return;
@@ -563,9 +545,7 @@ function startManagementPolling(userId) {
 }
 
 
-// -----------------------------
-// DISCONNECT VPN
-// -----------------------------
+
 app.post("/api/vpn/disconnect", authenticateJWT, async (req, res) => {
   try {
     const userId = req.user._id.toString();
@@ -605,7 +585,7 @@ app.post("/api/vpn/split-tunnel", authenticateJWT, async (req, res) => {
     if (!Array.isArray(domains) || domains.length === 0)
       return res.status(400).json({ message: "No domains provided" });
 
-    const gateway = getDefaultGateway(); // ✅ use the helper function
+    const gateway = getDefaultGateway(); 
 
     for (const domain of domains) {
   try{
@@ -636,24 +616,20 @@ app.post("/api/vpn/split-tunnel", authenticateJWT, async (req, res) => {
 
 
 function getDefaultGateway() {
-  return "10.81.32.1"; // You can make this dynamic later
+  return "10.81.32.1"; 
 }
 
 app.get('/api/me', authenticateJWT, async (req, res) => {
-  // Fetch the full user object to ensure we get the latest isConnected status
   const user = await User.findById(req.user._id).select('-passwordHash -refreshTokens').lean();
   if (!user) return res.status(404).json({ message: 'User not found' });
   
-  // The line below is not needed if using .lean() above, but kept for robustness
   const u = user.toObject ? user.toObject() : user; 
   delete u.refreshTokens;
   delete u.passwordHash;
   res.json(u);
 });
 
-// ----------------------
-// Admin routes
-// ----------------------
+
 app.get('/api/users', authenticateJWT, authorizeAdmin, async (req, res) => {
   const users = await User.find().select('-passwordHash -refreshTokens');
   res.json(users);
@@ -730,7 +706,6 @@ app.post('/api/users/:id/remove-admin', authenticateJWT, authorizeAdmin, async (
 });
 
 
-// ADMIN ACTION: Endpoint for admin to force a disconnect
 app.post('/api/users/:id/disconnect', authenticateJWT, authorizeAdmin, async (req, res) => {
     try {
         const { id } = req.params;
@@ -755,19 +730,18 @@ app.post('/api/users/:id/disconnect', authenticateJWT, authorizeAdmin, async (re
     vpnStatsMap.delete(userId);
     vpnManagementClients.delete(userId);
 
-        // 1. Update the database connection state
+
         user.isConnected = false;
         await user.save();
         
-        // 2. Push the update to the disconnected user's client using Socket.IO
-        // Use the event name the client is listening for ('statusUpdate')
+
         notifyUserStatusChange(id, { 
             type: 'forceDisconnect',
             message: 'Your VPN connection was reset by an administrator.',
             isConnected: false
         });
 
-        // 3. Push update to all admin clients (to refresh their user list)
+
         io.emit('adminRefresh', { userId: id, isConnected: false }); 
 
         res.json({ message: 'User disconnected successfully' });
@@ -792,9 +766,7 @@ app.post('/api/dev/create-admin', async (req, res) => {
   res.json({ message: 'admin created', userId: user._id });
 });
 
-// ------------------------------------
-// API: Get VPN stats for all users
-// ------------------------------------
+
 app.get("/api/vpn/stats", authenticateJWT, authorizeAdmin, async (req, res) => {
   try {
     const statsList = [];
@@ -846,5 +818,4 @@ app.post("/api/auth/stats", authenticateJWT, async (req, res) => {
 });
 
 
-// CRITICAL FIX: Use server.listen instead of app.listen
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
