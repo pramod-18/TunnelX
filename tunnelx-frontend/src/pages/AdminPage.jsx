@@ -130,7 +130,6 @@ const handleLogout = async () => {
 
 const handleDisconnect = async (id) => {
   try {
-    // Use the centralized apiRequest helper
     const res = await apiRequest(`/api/users/${id}/disconnect`, {
       method: "POST",
     });
@@ -140,7 +139,6 @@ const handleDisconnect = async (id) => {
       throw new Error(data.message || "Failed to disconnect user");
     }
 
-    // Update local UI state
     setUsers((prev) =>
       prev.map((u) =>
         u._id === id ? { ...u, isConnected: false } : u
@@ -164,7 +162,6 @@ const handleAddAdmin = async () => {
   const id = user2._id;
 
   try {
-    // Use the centralized apiRequest helper
     const res = await apiRequest(`/api/users/${id}/add-admin`, {
       method: "POST",
       body: JSON.stringify(
@@ -197,7 +194,6 @@ const handleRemoveAdmin = async () => {
   const id = user2._id;
 
   try {
-    // Use the centralized apiRequest helper
     const res = await apiRequest(`/api/users/${id}/remove-admin`, {
       method: "POST",
       body: JSON.stringify(
