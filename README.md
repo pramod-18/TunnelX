@@ -5,9 +5,10 @@ everything organized and under your control.
 ## 🔮 Features
 
 - 🔐 Secure VPN Service: Connect safely through TunnelX’s encrypted VPN network
-- 👥 User Management: Register, log in, and manage your account easily
-- 🧑‍💼 Admin Mode: Toggle between user and admin views effortlessly
-- ⚡ Admin Mode: Admins can view all users and disconnect them instantly
+- 🧑‍💼 User Management: Register, log in, and manage your account easily
+- ⚡ Admin and User Mode: Toggle between user and admin views effortlessly
+- 🧑🏼‍💻 Admin Mode: Admins can view all users and disconnect them instantly
+- 👥 Admin Management: Existing admins can add other admins
 - 📊 Live Stats Dashboard: Track data sent, received, and connection duration
 - 🔒 Secure Authentication: Safe login and session handling with JWT
 - 🚪 Quick Disconnect: Instantly cut off any active session with one click
@@ -104,11 +105,45 @@ everything organized and under your control.
 
    <img width="956" height="473" alt="image" src="https://github.com/user-attachments/assets/0e8510a4-f438-413e-a5ba-4faa6af07822" />
 
-  
-   
-6. **Start the servers:**
 
-   Frontend:
+6. **Enabling multiple OpenVPN connections:**
+
+   ***This section is optional &mdash; skip it if a single OpenVPN connection is sufficient for your setup.***
+
+   By default, **OpenVPN** allows only one active VPN connection per network interface.  
+
+   If you attempt to start multiple sessions simultaneously, you may encounter errors such as interface conflicts, routing issues, or failed connections.
+
+   This can be resolved by configuring multiple **TAP/TUN adapters** (virtual network interfaces) — one per OpenVPN connection.
+
+
+   ### 🪟 Windows
+
+   On Windows, OpenVPN uses **TAP-Windows adapters** (virtual Ethernet interfaces). Only one connection can use a given adapter at a time, so additional adapters must be created.
+
+   #### 🧩 Steps:
+
+   1. Open **Command Prompt** as Administrator.
+   2. Navigate to the TAP driver directory:
+      ```bash
+      cd "C:\Program Files\TAP-Windows\bin"
+      ```
+   3. Add a new TAP adapter:
+      ```bash
+      addtap.bat
+      ```
+   4. Repeat the command if you need more adapters.
+
+   ### Linux / macOS
+
+   On Linux, OpenVPN typically uses TUN interfaces (virtual point-to-point interfaces). So, you don’t need to manually create TUN adapters like you do on Windows.
+
+   When you start OpenVPN with a new device name (e.g., `tun0`, `tun1`, `tun2`), the operating system automatically creates the corresponding TUN interface.
+
+   
+8. **Start the servers:**
+
+   **Frontend:**
 
    To start the frontend, open a **Command Prompt** and paste the following commands:
    ```bash
@@ -116,7 +151,7 @@ everything organized and under your control.
    npm run dev
    ```
    
-   Backend:
+   **Backend:**
 
    To start the backend, open a **Command Prompt (Run as Administrator)** and paste the following commands:
    ```bash
@@ -124,7 +159,7 @@ everything organized and under your control.
    node server.js
    ```
    
-8. **Access the application:**
+9. **Access the application:**
 
    You can visit the following link to access the application.
    
